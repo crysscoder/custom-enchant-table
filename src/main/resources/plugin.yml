@@ -1,0 +1,8 @@
+name: CustomEnchantTable
+version: '1.0.0'
+main: dev.crysscoder.customenchanttable.CustomEnchantingTable
+api-version: '1.20'
+commands:
+  giveTable:
+    usage: /giveTable
+    description: Gives a custom enchanting table item
