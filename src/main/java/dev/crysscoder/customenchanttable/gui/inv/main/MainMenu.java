@@ -126,7 +126,6 @@ public class MainMenu implements MenuTable {
 
     public void open(Player player) {
         ItemStack saved = itemMenuManager.getItem(player);
-        player.sendMessage("item" + saved);
         inventory.setItem(ITEM_SLOT, saved);
 
         player.openInventory(inventory);
@@ -175,7 +174,8 @@ public class MainMenu implements MenuTable {
             }
 
             if (clickedItem != null && clickedItem.getType() == Material.ENCHANTED_BOOK) {
-                itemMenuManager.setItem(player, itemInBookSlot);
+                itemMenuManager.setItem(player, itemInBookSlot.clone());
+                top.setItem(ITEM_SLOT, null);
                 LevelMenu levelMenu = new LevelMenu(clickedItem, configData, player, itemMenuManager, menuManager);
                 Inventory levelInv = levelMenu.getInventory();
                 menuManager.setMenu(player, this);

@@ -119,21 +119,15 @@ public class LevelMenu implements MenuTable {
         final int slot = event.getRawSlot();
 
         if (slot < top.getSize()) {
-            if (slot == MainMenu.ITEM_SLOT) {
-                event.setCancelled(false);
-            } else {
-                event.setCancelled(true);
-                switch (slot) {
-                    case 22 -> applyEnchantment(player, 1, safeGetCostExp(0, 0));
-                    case 23 -> applyEnchantment(player, 2, safeGetCostExp(1, 1));
-                    case 24 -> applyEnchantment(player, 3, safeGetCostExp(2, 2));
-                    case 31 -> applyEnchantment(player, 4, safeGetCostExp(3, 3));
-                    case 32 -> applyEnchantment(player, 5, safeGetCostExp(4, 4));
-                    case 33 -> applyEnchantment(player, 6, safeGetCostExp(5, 5));
-                }
+            event.setCancelled(true);
+            switch (slot) {
+                case 22 -> applyEnchantment(player, 1, safeGetCostExp(0, 0));
+                case 23 -> applyEnchantment(player, 2, safeGetCostExp(1, 1));
+                case 24 -> applyEnchantment(player, 3, safeGetCostExp(2, 2));
+                case 31 -> applyEnchantment(player, 4, safeGetCostExp(3, 3));
+                case 32 -> applyEnchantment(player, 5, safeGetCostExp(4, 4));
+                case 33 -> applyEnchantment(player, 6, safeGetCostExp(5, 5));
             }
-
-
         }
 
     }
@@ -147,6 +141,9 @@ public class LevelMenu implements MenuTable {
 
     private void applyEnchantment(Player player, int level, int costEnchant) {
         ItemStack item = itemMenuManager.getItem(player);
+        if (item == null || item.getType() == Material.AIR) {
+            return;
+        }
 
         EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) bookItem.getItemMeta();
         if (bookMeta.getStoredEnchants().isEmpty()) return;
@@ -164,6 +161,9 @@ public class LevelMenu implements MenuTable {
         buyEnchantManager.removeExp(player, costEnchant);
 
         ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return;
+        }
         meta.addEnchant(enchant, level, true);
         item.setItemMeta(meta);
 
@@ -171,8 +171,9 @@ public class LevelMenu implements MenuTable {
 
         MenuTable menu = menuManager.getMenu(player);
         itemMenuManager.setItem(player, item);
-        player.sendMessage("item" + item);
-        menu.open(player);
+        if (menu != null) {
+            menu.open(player);
+        }
 
         itemMenuManager.removeItem(player);
     }
